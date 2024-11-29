@@ -13,4 +13,6 @@ add_executable(PEA_projekt_2 main.cpp
         algorithms/TabuSearch.cpp
         algorithms/TabuSearch.h
         Menu.cpp
-        Menu.h)
+        Menu.h
+        algorithms/SimAnnealing.cpp
+        algorithms/SimAnnealing.h)
