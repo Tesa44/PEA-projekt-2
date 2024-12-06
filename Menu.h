@@ -8,12 +8,18 @@
 using namespace std;
 
 class Menu {
+public:
     char mainChoice;
     char algorithmChoice;
     char exitConfirmChoice;
+    char tsChoice;
+    char swChoice;
     void mainMenu();
     void algorithmsMenu();
-    int inputLen();
+    double inputStop();
+    double inputFactorA();
+    void tsMenu();
+    void swMenu();
     int n;
     bool checkChoices(char choice, char choiceQuantity);
     string inputPath();

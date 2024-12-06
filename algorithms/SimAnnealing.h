@@ -14,15 +14,16 @@ private:
     int* currentRoute;        // Obecna trasa
     int* bestRoute;           // Najlepsza trasa
     double temperature;       // Bieżąca temperatura
-    double coolingRate;       // Współczynnik schładzania
-    int coolingScheme;        // Typ schładzania
-    double timeLimit;         // Limit czasu
+    double coolingRate = 0.999;       // Współczynnik schładzania
+    int coolingScheme = 1;        // Typ schładzania
+    double timeLimit = 20.0;         // Limit czasu
+    int maxIter = 100;         //Maksymalna liczba iteracji bez dywersyfikacji
     int currentCost;          // Koszt obecnej trasy
     int bestCost;             // Koszt najlepszej trasy
 
 
 public:
-    SimAnnealing(int coolingScheme, double coolingRate, double timeLimit);
+    //SimAnnealing(int coolingScheme, double coolingRate, double timeLimit);
 
     ~SimAnnealing() {
         if (distanceMatrix) {
@@ -39,9 +40,11 @@ public:
     void calculateInitialTemperature();
     int calculateCost(int* route);
     void perturbRoute(int* route);
-    void run();
+    void solve();
     void setCoolingScheme(int scheme);
     void saveResultToFile(const std::string& filename);
+    void setTimeLimit(double newTimeLimit);
+    void setCoolingRate(double newCoolingRate);
 };
 
 

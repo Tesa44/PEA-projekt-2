@@ -162,48 +162,134 @@ void TabuSearch::setNeighborhood(int choice) {
         }
     }
 
+// int* TabuSearch::solve() {
+//         tabuList = new int*[numCities];
+//         for (int i = 0; i < numCities; ++i) {
+//             tabuList[i] = new int[numCities]();
+//         }
+//
+//         int* currentRoute = new int[numCities];
+//         int* bestRoute = new int[numCities + 1];
+//         generateRandomRoute(currentRoute);
+//         std::copy(currentRoute, currentRoute + numCities, bestRoute);
+//         int bestCost = calculateCost(bestRoute);
+//
+//         auto startTime = std::chrono::steady_clock::now();
+//         int noImprove = 0;
+//
+//         while (true) {
+//             auto currentTime = std::chrono::steady_clock::now();
+//             double elapsedTime = std::chrono::duration<double>(currentTime - startTime).count();
+//             if (elapsedTime > timeLimit) break;
+//
+//             int* bestNeighbor = new int[numCities];
+//             int neighborCost = neighborhoodFunc(currentRoute, numCities, bestNeighbor, distanceMatrix);
+//
+//             if (neighborCost < bestCost) {
+//                 bestCost = neighborCost;
+//                 std::copy(bestNeighbor, bestNeighbor + numCities, bestRoute);
+//                 noImprove = 0;
+//             } else {
+//                 noImprove++;
+//             }
+//
+//             delete[] bestNeighbor;
+//             if (noImprove >= maxNoImprove) {
+//                 generateRandomRoute(currentRoute); // Dywersyfikacja
+//                 noImprove = 0;
+//             }
+//         }
+//         bestRoute[numCities] = 0;
+//
+//         delete[] currentRoute;
+//         return bestRoute;
+// };
 int* TabuSearch::solve() {
-        tabuList = new int*[numCities];
+    tabuList = new int*[numCities];
+    for (int i = 0; i < numCities; ++i) {
+        tabuList[i] = new int[numCities]();
+    }
+
+    int* currentRoute = new int[numCities];
+    int* bestRoute = new int[numCities + 1];
+    generateRandomRoute(currentRoute);
+    std::copy(currentRoute, currentRoute + numCities, bestRoute);
+    int bestCost = calculateCost(bestRoute);
+
+    auto startTime = std::chrono::steady_clock::now();
+    int noImprove = 0;
+
+    while (true) {
+        auto currentTime = std::chrono::steady_clock::now();
+        double elapsedTime = std::chrono::duration<double>(currentTime - startTime).count();
+        if (elapsedTime > timeLimit) break;
+
+        int* bestNeighbor = new int[numCities];
+        int bestNeighborCost = INT_MAX;
+
+        for (int i = 1; i < numCities - 1; ++i) {
+            for (int j = i + 1; j < numCities; ++j) {
+                if (tabuList[i][j] > 0) continue; // Pomijanie ruchów tabu
+
+                int* tempNeighbor = new int[numCities];
+                std::copy(currentRoute, currentRoute + numCities, tempNeighbor);
+                std::swap(tempNeighbor[i], tempNeighbor[j]);
+
+                int neighborCost = calculateCost(tempNeighbor);
+
+                // Aspiracja - jeśli rozwiązanie lepsze niż dotychczasowe najlepsze
+                if (neighborCost < bestCost || tabuList[i][j] == 0) {
+                    if (neighborCost < bestNeighborCost) {
+                        bestNeighborCost = neighborCost;
+                        std::copy(tempNeighbor, tempNeighbor + numCities, bestNeighbor);
+                    }
+                }
+                delete[] tempNeighbor;
+            }
+        }
+
+        // Aktualizacja najlepszej trasy
+        if (bestNeighborCost < bestCost) {
+            bestCost = bestNeighborCost;
+            std::copy(bestNeighbor, bestNeighbor + numCities, bestRoute);
+            noImprove = 0;
+        } else {
+            noImprove++;
+        }
+
+        // Aktualizacja listy tabu
         for (int i = 0; i < numCities; ++i) {
-            tabuList[i] = new int[numCities]();
-        }
-
-        int* currentRoute = new int[numCities];
-        int* bestRoute = new int[numCities + 1];
-        generateRandomRoute(currentRoute);
-        std::copy(currentRoute, currentRoute + numCities, bestRoute);
-        int bestCost = calculateCost(bestRoute);
-
-        auto startTime = std::chrono::steady_clock::now();
-        int noImprove = 0;
-
-        while (true) {
-            auto currentTime = std::chrono::steady_clock::now();
-            double elapsedTime = std::chrono::duration<double>(currentTime - startTime).count();
-            if (elapsedTime > timeLimit) break;
-
-            int* bestNeighbor = new int[numCities];
-            int neighborCost = neighborhoodFunc(currentRoute, numCities, bestNeighbor, distanceMatrix);
-
-            if (neighborCost < bestCost) {
-                bestCost = neighborCost;
-                std::copy(bestNeighbor, bestNeighbor + numCities, bestRoute);
-                noImprove = 0;
-            } else {
-                noImprove++;
-            }
-
-            delete[] bestNeighbor;
-            if (noImprove >= maxNoImprove) {
-                generateRandomRoute(currentRoute); // Dywersyfikacja
-                noImprove = 0;
+            for (int j = 0; j < numCities; ++j) {
+                if (tabuList[i][j] > 0) tabuList[i][j]--;
             }
         }
-        bestRoute[numCities] = 0;
 
-        delete[] currentRoute;
-        return bestRoute;
+        // Oznaczenie ostatniego ruchu jako tabu
+        for (int i = 1; i < numCities - 1; ++i) {
+            for (int j = i + 1; j < numCities; ++j) {
+                if (currentRoute[i] != bestNeighbor[i] || currentRoute[j] != bestNeighbor[j]) {
+                    tabuList[i][j] = tabuTenure;
+                }
+            }
+        }
+
+        std::copy(bestNeighbor, bestNeighbor + numCities, currentRoute);
+
+        // Dywersyfikacja w przypadku braku poprawy
+        if (noImprove >= maxNoImprove) {
+            generateRandomRoute(currentRoute);
+            noImprove = 0;
+        }
+
+        delete[] bestNeighbor;
+    }
+
+    bestRoute[numCities] = bestRoute[0]; // Powrót do pierwszego miasta
+
+    delete[] currentRoute;
+    return bestRoute;
 };
+
 
 int TabuSearch::getNumCities()
 {
@@ -250,3 +336,64 @@ int** TabuSearch::getDistanceMatrix()
     return distanceMatrix;
 }
 
+void TabuSearch::setTenure(int newTenure)
+{
+    tabuTenure = newTenure;
+}
+
+void TabuSearch::setTimeLimit(double newTimeLimit)
+{
+    timeLimit = newTimeLimit;
+}
+
+int* TabuSearch::generateGreedyRoute() {
+    int* bestRoute = new int[numCities+1];
+    int bestCost = INT_MAX;
+
+    for (int startCity = 0; startCity < numCities; ++startCity) {
+        // Tymczasowa tablica na aktualną trasę
+        int* tempRoute = new int[numCities+1];
+        bool* visited = new bool[numCities]{false};
+
+        // Inicjalizacja ścieżki
+        tempRoute[0] = startCity;
+        visited[startCity] = true;
+
+        // Budowanie trasy zachłannej
+        for (int i = 1; i < numCities; ++i) {
+            int lastCity = tempRoute[i - 1];
+            int nearestCity = -1;
+            int minDistance = INT_MAX;
+
+            for (int j = 0; j < numCities; ++j) {
+                if (!visited[j] && distanceMatrix[lastCity][j] < minDistance) {
+                    minDistance = distanceMatrix[lastCity][j];
+                    nearestCity = j;
+                }
+            }
+
+            tempRoute[i] = nearestCity;
+            visited[nearestCity] = true;
+        }
+        //Droga powrotna
+        tempRoute[numCities] = startCity;
+        // Obliczenie kosztu trasy
+        int tempCost = calculateCost(tempRoute);
+
+        // Aktualizacja najlepszego rozwiązania
+        if (tempCost < bestCost) {
+            bestCost = tempCost;
+            std::copy(tempRoute, tempRoute + numCities+1, bestRoute);
+        }
+
+        delete[] tempRoute;
+        delete[] visited;
+    }
+
+    saveResultToFile("wynik.txt", bestRoute, numCities+1);
+    std::cout << calculateCostFromFile("wynik.txt",distanceMatrix, numCities) << std::endl;
+    // Przypisanie najlepszego rozwiązania do finalnej trasy
+    //std::copy(bestRoute, bestRoute + numCities, route);
+    //delete[] bestRoute;
+    return bestRoute;
+}

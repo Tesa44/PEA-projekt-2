@@ -16,22 +16,22 @@
 #include <vector>
 #include <chrono> // Do pomiaru czasu
 
-SimAnnealing::SimAnnealing(int coolingScheme, double coolingRate, double timeLimit)
-    : coolingScheme(coolingScheme), coolingRate(coolingRate), timeLimit(timeLimit),
-      distanceMatrix(nullptr), currentRoute(nullptr), bestRoute(nullptr),
-      numCities(0), temperature(0.0), currentCost(std::numeric_limits<int>::max()),
-      bestCost(std::numeric_limits<int>::max()) {
-    // Konstruktor z parametrami
-    if (coolingScheme < 1 || coolingScheme > 3) {
-        throw std::invalid_argument("Nieprawidłowy schemat schładzania: wybierz 1, 2 lub 3.");
-    }
-    if (coolingRate <= 0.0 || coolingRate >= 1.0) {
-        throw std::invalid_argument("Współczynnik schładzania powinien być w zakresie (0, 1).");
-    }
-    if (timeLimit <= 0.0) {
-        throw std::invalid_argument("Limit czasu musi być większy od zera.");
-    }
-};
+// SimAnnealing::SimAnnealing(int coolingScheme, double coolingRate, double timeLimit)
+//     : coolingScheme(coolingScheme), coolingRate(coolingRate), timeLimit(timeLimit),
+//       distanceMatrix(nullptr), currentRoute(nullptr), bestRoute(nullptr),
+//       numCities(0), temperature(0.0), currentCost(std::numeric_limits<int>::max()),
+//       bestCost(std::numeric_limits<int>::max()) {
+//     // Konstruktor z parametrami
+//     if (coolingScheme < 1 || coolingScheme > 3) {
+//         throw std::invalid_argument("Nieprawidłowy schemat schładzania: wybierz 1, 2 lub 3.");
+//     }
+//     if (coolingRate <= 0.0 || coolingRate >= 1.0) {
+//         throw std::invalid_argument("Współczynnik schładzania powinien być w zakresie (0, 1).");
+//     }
+//     if (timeLimit <= 0.0) {
+//         throw std::invalid_argument("Limit czasu musi być większy od zera.");
+//     }
+// };
 
 
 void SimAnnealing::loadFromFile(const std::string& filename) {
@@ -112,9 +112,12 @@ void SimAnnealing::calculateInitialTemperature() {
 
         int cost1 = calculateCost(route1);
         int cost2 = calculateCost(route2);
+        // perturbRoute(route1);
+        // int cost2 = calculateCost(route1);
 
         double deltaCost = std::abs(cost1 - cost2);
         temperature = -deltaCost / std::log(0.8);
+        //temperature = 10 * (-deltaCost / std::log(0.8));
         std::cout << "temperatura początkowa: " << temperature << std::endl;
         delete[] route1;
         delete[] route2;
@@ -136,23 +139,78 @@ void SimAnnealing::perturbRoute(int* route) {
             j = rand() % numCities;
         }
         std::swap(route[i], route[j]);
-    }
+
+        // Losowe odwrócenie fragmentu trasy (2-opt)
+        // int i = rand() % numCities;
+        // int j = rand() % numCities;
+        // if (i > j) std::swap(i, j); // Upewnij się, że i < j
+        // std::reverse(route + i, route + j + 1);
+}
 
 
-void SimAnnealing::run() {
+
+
+// void SimAnnealing::solve() {
+//     initializeRoute();
+//     calculateInitialTemperature();
+//
+//     auto startTime = std::chrono::steady_clock::now();
+//     int iteration = 0;
+//     double elapsedTime = 0.0;
+//     while ( elapsedTime <= timeLimit) {
+//         auto currentTime = std::chrono::steady_clock::now();
+//         elapsedTime = std::chrono::duration<double>(currentTime - startTime).count();
+//
+//         int* newRoute = new int[numCities];
+//         std::copy(currentRoute, currentRoute + numCities, newRoute);
+//
+//         perturbRoute(newRoute);
+//         int newCost = calculateCost(newRoute);
+//
+//         double acceptanceProbability = exp((currentCost - newCost) / temperature);
+//
+//         if (newCost < currentCost || (rand() / double(RAND_MAX)) < acceptanceProbability) {
+//             std::copy(newRoute, newRoute + numCities, currentRoute);
+//             currentCost = newCost;
+//
+//             if (newCost < bestCost) {
+//                 std::copy(newRoute, newRoute + numCities, bestRoute);
+//                 bestCost = newCost;
+//             }
+//         }
+//
+//         // Aktualizacja temperatury
+//         switch (coolingScheme) {
+//         case 1:
+//             temperature *= coolingRate;
+//             break;
+//         case 2:
+//             temperature /= (1 + 0.001 * temperature);
+//             break;
+//         case 3:
+//             temperature = temperature / std::log(iteration + 2);
+//             break;
+//         }
+//
+//         delete[] newRoute;
+//         iteration++;
+//     }
+//
+//     std::cout << "Ostateczna temperatura: " << temperature << "\n";
+//     std::cout << "Wartość exp(-1/Tk): " << exp(-1 / temperature) << "\n";
+//     std::cout << "Najlepszy koszt: " << bestCost << "\n";
+// }
+void SimAnnealing::solve() {
     initializeRoute();
     calculateInitialTemperature();
 
     auto startTime = std::chrono::steady_clock::now();
     int iteration = 0;
+    double elapsedTime = 0.0;
 
-    while (temperature > 0.01) {
+    while (elapsedTime <= timeLimit) {
         auto currentTime = std::chrono::steady_clock::now();
-        double elapsedTime = std::chrono::duration<double>(currentTime - startTime).count();
-        if (elapsedTime >= timeLimit) {
-            std::cout << "Osiągnięto limit czasu: " << timeLimit << " sekund.\n";
-            break;
-        }
+        elapsedTime = std::chrono::duration<double>(currentTime - startTime).count();
 
         int* newRoute = new int[numCities];
         std::copy(currentRoute, currentRoute + numCities, newRoute);
@@ -161,7 +219,7 @@ void SimAnnealing::run() {
         int newCost = calculateCost(newRoute);
 
         double acceptanceProbability = exp((currentCost - newCost) / temperature);
-
+            // std::cout << acceptanceProbability <<"   "<<temperature << std::endl;
         if (newCost < currentCost || (rand() / double(RAND_MAX)) < acceptanceProbability) {
             std::copy(newRoute, newRoute + numCities, currentRoute);
             currentCost = newCost;
@@ -170,6 +228,12 @@ void SimAnnealing::run() {
                 std::copy(newRoute, newRoute + numCities, bestRoute);
                 bestCost = newCost;
             }
+        }
+
+        // *** Mechanizm dywersyfikacji ***
+        if (iteration % maxIter == 0 && currentCost == bestCost) {
+            perturbRoute(currentRoute); // Wprowadzenie losowej zmiany w trasie
+            currentCost = calculateCost(currentRoute); // Przeliczenie kosztu dla nowej trasy
         }
 
         // Aktualizacja temperatury
@@ -213,4 +277,15 @@ void SimAnnealing::saveResultToFile(const std::string& filename) {
         file << bestRoute[0] << "\n";
         file.close();
 }
+
+void SimAnnealing::setTimeLimit(double newTimeLimit)
+{
+    timeLimit = newTimeLimit;
+}
+
+void SimAnnealing::setCoolingRate(double newCoolingRate)
+{
+    coolingRate = newCoolingRate;
+}
+
 

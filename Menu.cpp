@@ -3,3 +3,126 @@
 //
 
 #include "Menu.h"
+
+#include <iostream>
+using namespace std;
+
+
+void Menu::mainMenu() {
+    while (true) {
+        cout << "Witaj w menu programu" << endl;
+        cout << "1. Uzyj ostatnio wczytana macierz" << endl;
+        cout << "2. Wczytaj macierz z pliku o zadanej nazwie" << endl;
+        cout << "3. Podaj kryterium stopu" << endl;
+        cout << "4. Wybierz metode sasiedztwa dla TS" << endl;
+        cout << "5. Wybierz metode sasiedztwa dla SW" << endl;
+        cout << "6. Ustaw wspolczynny a dla SW" << endl;
+        cout << "7. Rozwiaz metoda zachlanna" << endl;
+        cin >> mainChoice;
+        if (checkChoices(mainChoice, '7'))
+            return;
+    }
+}
+
+void Menu::tsMenu()
+{
+    while (true) {
+        cout << "Wybierz jedna z metod wyboru sasiedztwa dla TS" << endl;
+        cout << "1. SWAP - zamiana dwoch miast w trasie" << endl;
+        cout << "2. INSERT - przeniesienie jednego miasta w innej miejsce" << endl;
+        cout << "3. REVERSE - odwrocenie kolejnosci miast na pododcinku trasy" << endl;
+        cin >> tsChoice;
+        if (checkChoices(tsChoice, '3')) return;
+    }
+}
+void Menu::swMenu()
+{
+    while (true) {
+        cout << "Wybierz jedna z metod schladzania dla SW" << endl;
+        cout << "1. T(i+1) = a * T(i)" << endl;
+        cout << "2. T(i+1) = T(i) / (1 + b * T(i))" << endl;
+        cout << "3. T(i+1) = T(0) / log(i + 2)" << endl;
+        cin >> swChoice;
+        if (checkChoices(swChoice, '3')) return;
+    }
+}
+
+
+string Menu::inputPath() {
+    string path;
+    cout << "Podaj sciezke do pliku atsp " << endl;
+    cin >> path;
+    return path;
+}
+
+
+//Metoda służy do sprawdzania czy wybór wpisany przez użytkownika jest zgodny z jakimkolwiek wyborem
+//char choice - znak podany przez użytkownika określający wybór
+//char choiceQuantity - ile posiadamy wyborów w menu
+bool Menu::checkChoices(char choice, char choiceQuantity) {
+    if (choice >= '1' && choice <= choiceQuantity)
+        return true;
+    cout << "Niepoprawny wybor!" << endl;
+    return false;
+}
+
+
+void Menu::exitConfirmMenu() {
+    while (true) {
+        cout << "Czy chcesz wyjsc z programu?" << endl;
+        cout << "1. Wroc do algorytmow" << endl;
+        cout << "2. Zamknij program" << endl;
+        cin >> exitConfirmChoice;
+        if (checkChoices(exitConfirmChoice, '2'))
+            return;
+    }
+}
+
+void Menu::algorithmsMenu() {
+    cout << "Wybierz algorytm do problemu ATSP" << endl;
+    cout << "1. Algorytm Tabu Search" << endl;
+    cout << "2. Algorytm Symulowanego Wyzarzania" << endl;
+    cin >> algorithmChoice;
+    if (checkChoices(algorithmChoice, '2')) return;
+}
+
+double Menu::inputStop() {
+    string input;
+    bool guard;
+    while (true) {
+        guard = true;
+        cout << "Podaj kryterium stopu " << endl;
+        cin >> input;
+        for (int i = 0; i < input.length(); i++) {
+            if (isdigit(input[i] == false))
+                guard = false;
+        }
+        if (guard) {
+            double n = stod(input);
+            if (n > 0)
+                return n;
+        }
+        cout << "To nie jest liczba wieksza od 0" << endl;
+    }
+}
+
+double Menu::inputFactorA() {
+    string input;
+    bool guard;
+    while (true) {
+        guard = true;
+        cout << "Podaj wspolczynnik a (0 - 1)" << endl;
+        cin >> input;
+        for (int i = 0; i < input.length(); i++) {
+            if (isdigit(input[i] == false))
+                guard = false;
+        }
+        if (guard) {
+            double n = stod(input);
+            if (n > 0 && n < 1)
+                return n;
+        }
+        cout << "To nie jest liczba z zakresu 0 - 1" << endl;
+    }
+}
+

@@ -4,6 +4,7 @@
 
 #ifndef TABUSEARCH_H
 #define TABUSEARCH_H
+#include <limits>
 #include <string>
 
 
@@ -13,10 +14,11 @@ private:
     int** distanceMatrix;   // Macierz odległości
     int** tabuList;         // Lista tabu (alokacja dynamiczna)
     int numCities;          // Liczba miast
-    int tabuTenure;         // Czas trwania zakazu na liście tabu
-    int maxNoImprove;       // Maksymalna liczba iteracji bez poprawy
-    double timeLimit;       // Limit czasu (w sekundach)
-    int (*neighborhoodFunc)(int*, int, int*, int**); // Wskaźnik na funkcję definiującą sąsiedztwo
+    int tabuTenure = 10;         // Czas trwania zakazu na liście tabu
+    int maxNoImprove = 100;       // Maksymalna liczba iteracji bez poprawy
+    double timeLimit = 20.0;       // Limit czasu (w sekundach)
+
+    int (*neighborhoodFunc)(int*, int, int*, int**) = &swapNeighborhood; // Wskaźnik na funkcję definiującą sąsiedztwo
     int calculateCost(int* route);
     void generateRandomRoute(int* route);
     static int swapNeighborhood(int* CurrentRoute, int numCities, int* bestNeighbor, int** distanceMatrix);
@@ -24,12 +26,14 @@ private:
     static int reverseNeighborhood(int* currentRoute, int numCities, int* bestNeighbor, int** distanceMatrix);
 
 public:
-    TabuSearch(int tenure = 10, int maxIter = 1000, double timeLimitSec = 10.0)
-        : tabuTenure(tenure), maxNoImprove(maxIter), timeLimit(timeLimitSec), neighborhoodFunc(nullptr)
-    {
-        distanceMatrix = nullptr;
-        tabuList = nullptr;
-    }
+    // TabuSearch(int tenure = 10, int maxIter = 1000, double timeLimitSec = 10.0)
+    //     : tabuTenure(tenure), maxNoImprove(maxIter), timeLimit(timeLimitSec), neighborhoodFunc(nullptr)
+    // {
+    //     distanceMatrix = nullptr;
+    //     tabuList = nullptr;
+    // }
+
+
     ~TabuSearch()
     {
         if (distanceMatrix) {
@@ -48,6 +52,9 @@ public:
     void saveResultToFile(const std::string& filename, int* route, int numCities);
     int calculateCostFromFile(const std::string& filename, int** distanceMatrix, int numCities);
     int** getDistanceMatrix();
+    void setTenure(int newTenure);
+    void setTimeLimit(double newTimeLimit);
+    int* generateGreedyRoute();
 
 };
 
