@@ -15,8 +15,8 @@ private:
     int** tabuList;         // Lista tabu (alokacja dynamiczna)
     int numCities;          // Liczba miast
     int tabuTenure = 15;         // Czas trwania zakazu na liście tabu
-    int maxNoImprove = 40;       // Maksymalna liczba iteracji bez poprawy
-    double timeLimit = 10.0;       // Limit czasu (w sekundach)
+    int maxNoImprove = 200000;       // Maksymalna liczba iteracji bez poprawy
+    double timeLimit = 20.0;       // Limit czasu (w sekundach)
     double bestFindTime = 0.0;
 
     int (*neighborhoodFunc)(int*, int, int*, int**) = &swapNeighborhood; // Wskaźnik na funkcję definiującą sąsiedztwo

@@ -20,6 +20,9 @@ private:
     int maxIter = 100;         //Maksymalna liczba iteracji bez dywersyfikacji
     int currentCost;          // Koszt obecnej trasy
     int bestCost;             // Koszt najlepszej trasy
+    double bestFindTime = 0.0;
+    void apply2Opt(int *route);
+    void initializeGreedyRoute();
 
 
 public:
@@ -40,7 +43,7 @@ public:
     void calculateInitialTemperature();
     int calculateCost(int* route);
     void perturbRoute(int* route);
-    void solve();
+    int* solve();
     void setCoolingScheme(int scheme);
     void saveResultToFile(const std::string& filename);
     void setTimeLimit(double newTimeLimit);

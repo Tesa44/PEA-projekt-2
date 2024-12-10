@@ -97,7 +97,7 @@ void App::runAlgorithms()
         case '2':
             for (int i = 0; i < 10; i++)
             {
-                sm.solve();
+                solution = sm.solve();
                 sm.saveResultToFile("wynik.txt");
                 std:: cout << ts.calculateCostFromFile("wynik.txt",ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
             }
