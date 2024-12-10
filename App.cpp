@@ -5,6 +5,7 @@
 #include "App.h"
 
 #include <iostream>
+#include <sstream>
 
 
 #include "algorithms/SimAnnealing.h"
@@ -49,7 +50,7 @@ void App::run()
         case '4':
             menu.tsMenu();
             tsChoice = menu.tsChoice - '0';
-            ts.setNeighborhood(tsChoice);
+            //ts.setNeighborhood(tsChoice);
             break;
         case '5':
             menu.swMenu();
@@ -74,8 +75,9 @@ void App::runAlgorithms()
         int* solution;
         switch (menu.algorithmChoice) {
         case '1':
-            for (int i = 0; i <= 5; i++)
+            for (int i = 0; i < 10; i++)
             {
+                cout << "Test: " << i << endl;
                 solution = ts.solve();
                 // std::cout << ts.getNumCities() << std::endl;
                 //      std::cout << "Najlepsza trasa: ";
@@ -84,12 +86,16 @@ void App::runAlgorithms()
 
                 //      }
                 //      std::cout << '\n';
+                //ostringstream os;
+                //os << "wynik" << i << ".txt";
+                //string filepath = os.str();
+                //cout << filepath << endl;
                 ts.saveResultToFile("wynik.txt",solution,ts.getNumCities());
-                std:: cout << ts.calculateCostFromFile("wynik.txt",ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
+                std:: cout << "z pliku: "<< ts.calculateCostFromFile("wynik.txt",ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
             }
             break;
         case '2':
-            for (int i = 0; i <= 5; i++)
+            for (int i = 0; i < 10; i++)
             {
                 sm.solve();
                 sm.saveResultToFile("wynik.txt");
@@ -97,7 +103,7 @@ void App::runAlgorithms()
             }
             break;
         }
-        std:: cout << ts.calculateCostFromFile("wynik.txt",ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
+        //std:: cout << ts.calculateCostFromFile("wynik.txt",ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
         menu.exitConfirmMenu();
         delete[] solution;
     }

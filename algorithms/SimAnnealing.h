@@ -14,7 +14,7 @@ private:
     int* currentRoute;        // Obecna trasa
     int* bestRoute;           // Najlepsza trasa
     double temperature;       // Bieżąca temperatura
-    double coolingRate = 0.999;       // Współczynnik schładzania
+    double coolingRate = 0.99;       // Współczynnik schładzania
     int coolingScheme = 1;        // Typ schładzania
     double timeLimit = 20.0;         // Limit czasu
     int maxIter = 100;         //Maksymalna liczba iteracji bez dywersyfikacji
