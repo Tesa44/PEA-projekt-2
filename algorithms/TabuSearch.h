@@ -14,17 +14,18 @@ private:
     int** distanceMatrix;   // Macierz odległości
     int** tabuList;         // Lista tabu (alokacja dynamiczna)
     int numCities;          // Liczba miast
-    int tabuTenure = 15;         // Czas trwania zakazu na liście tabu
-    int maxNoImprove = 200000;       // Maksymalna liczba iteracji bez poprawy
-    double timeLimit = 20.0;       // Limit czasu (w sekundach)
+    int tabuTenure = 10;         // Czas trwania zakazu na liście tabu 55 (5-15) ; 170 (10-25) ; 358 (15-35)
+    int maxNoImprove = 50;       // Maksymalna liczba iteracji bez poprawy 55 (30-50) ; 170 (50-100) ; 358 ( 100 - 200)
+    double timeLimit = 60.0;       // Limit czasu (w sekundach)
     double bestFindTime = 0.0;
 
-    int (*neighborhoodFunc)(int*, int, int*, int**) = &swapNeighborhood; // Wskaźnik na funkcję definiującą sąsiedztwo
+    int (TabuSearch::*neighborhoodFunc)(int*, int*) = &swapNeighborhood; // Wskaźnik na funkcję definiującą sąsiedztwo
     int calculateCost(int* route);
     void generateRandomRoute(int* route);
-    static int swapNeighborhood(int* CurrentRoute, int numCities, int* bestNeighbor, int** distanceMatrix);
-    static int insertNeighborhood(int* currentRoute, int numCities, int* bestNeighbor, int** distanceMatrix);
-    static int reverseNeighborhood(int* currentRoute, int numCities, int* bestNeighbor, int** distanceMatrix);
+    int swapNeighborhood(int* currentRoute, int* bestNeighbor);
+    int insertNeighborhood(int* currentRoute, int* bestNeighbor);
+    int reverseNeighborhood(int* currentRoute, int* bestNeighbor);
+    int kSwapNeighborhood(int* currentRoute, int* bestNeighbor);
 
     void generateSwapNeighborhood(int* solution);
     void generateReverseNeighborhood(int* solution);

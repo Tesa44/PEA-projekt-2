@@ -15,7 +15,7 @@ void App::run()
 {
     //Inicjalizacja
     // TabuSearch ts(10,100,20.0);
-    //ts.setNeighborhood(1);
+    ts.setNeighborhood(1);
     // SimAnnealing sm(1, 0.95, 20.0);
 
     bool isMatrix = false;
@@ -50,7 +50,7 @@ void App::run()
         case '4':
             menu.tsMenu();
             tsChoice = menu.tsChoice - '0';
-            //ts.setNeighborhood(tsChoice);
+            ts.setNeighborhood(tsChoice);
             break;
         case '5':
             menu.swMenu();
