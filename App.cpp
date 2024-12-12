@@ -73,6 +73,7 @@ void App::runAlgorithms()
     {
         menu.algorithmsMenu();
         int* solution;
+        srand(time(NULL));
         switch (menu.algorithmChoice) {
         case '1':
             for (int i = 0; i < 10; i++)
@@ -86,20 +87,26 @@ void App::runAlgorithms()
 
                 //      }
                 //      std::cout << '\n';
-                //ostringstream os;
-                //os << "wynik" << i << ".txt";
-                //string filepath = os.str();
-                //cout << filepath << endl;
-                ts.saveResultToFile("wynik.txt",solution,ts.getNumCities());
-                std:: cout << "z pliku: "<< ts.calculateCostFromFile("wynik.txt",ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
+                ostringstream os;
+                os << "wynik" << i << ".txt";
+                string filepath = os.str();
+                cout << filepath << endl;
+                ts.saveResultToFile(filepath,solution,ts.getNumCities());
+                std:: cout << "z pliku: "<< ts.calculateCostFromFile(filepath,ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
+                delete[] solution;
             }
             break;
         case '2':
             for (int i = 0; i < 10; i++)
             {
                 solution = sm.solve();
-                sm.saveResultToFile("wynik.txt");
-                std:: cout << ts.calculateCostFromFile("wynik.txt",ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
+                ostringstream os;
+                os << "wynik" << i << ".txt";
+                string filepath = os.str();
+                cout << filepath << endl;
+                ts.saveResultToFile(filepath,solution,ts.getNumCities());
+                std:: cout << "z pliku: "<< ts.calculateCostFromFile(filepath,ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
+                delete[] solution;
             }
             break;
         }

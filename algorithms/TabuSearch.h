@@ -14,9 +14,9 @@ private:
     int** distanceMatrix;   // Macierz odległości
     int** tabuList;         // Lista tabu (alokacja dynamiczna)
     int numCities;          // Liczba miast
-    int tabuTenure = 10;         // Czas trwania zakazu na liście tabu 55 (5-15) ; 170 (10-25) ; 358 (15-35)
+    int tabuTenure = 15;         // Czas trwania zakazu na liście tabu 55 (5-15) ; 170 (10-25) ; 358 (15-35)
     int maxNoImprove = 50;       // Maksymalna liczba iteracji bez poprawy 55 (30-50) ; 170 (50-100) ; 358 ( 100 - 200)
-    double timeLimit = 60.0;       // Limit czasu (w sekundach)
+    double timeLimit = 10.0;       // Limit czasu (w sekundach)
     double bestFindTime = 0.0;
 
     int (TabuSearch::*neighborhoodFunc)(int*, int*) = &swapNeighborhood; // Wskaźnik na funkcję definiującą sąsiedztwo

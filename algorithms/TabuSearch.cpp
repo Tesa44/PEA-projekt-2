@@ -23,8 +23,11 @@ int TabuSearch::calculateCost(int* route) {
         return cost;
 }
 
+
+
 void TabuSearch::generateRandomRoute(int* route) {
     route[0] = 0; //Zawsze zaczynamy od miasta 0
+    srand(time(NULL));
         for (int i = 1; i < numCities; ++i) route[i] = i;
         for (int i = 1; i < numCities; ++i) {
             int j = rand() % (numCities - 1) + 1;
@@ -241,7 +244,6 @@ int* TabuSearch::solve() {
         // Dywersyfikacja w przypadku braku poprawy
         if (noImprove >= maxNoImprove) {
             perturbRoute(currentRoute); // Modyfikujemy trasę zamiast losować nową
-            // std::cout << "perturbRoute" << std::endl;
             noImprove = 0;
         }
 

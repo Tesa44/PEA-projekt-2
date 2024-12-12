@@ -4,6 +4,7 @@
 
 #ifndef SIMANNEALING_H
 #define SIMANNEALING_H
+#include <random>
 #include <string>
 
 
@@ -13,18 +14,24 @@ private:
     int** distanceMatrix;  // Macierz odległości
     int* currentRoute;        // Obecna trasa
     int* bestRoute;           // Najlepsza trasa
-    double temperature;       // Bieżąca temperatura
-    double coolingRate = 0.99;       // Współczynnik schładzania
+    double temperature = 0;       // Bieżąca temperatura
+    double coolingRate = 0.95;       // Współczynnik schładzania
     int coolingScheme = 1;        // Typ schładzania
-    double timeLimit = 20.0;         // Limit czasu
+    double timeLimit = 60.0;         // Limit czasu
     int maxIter = 100;         //Maksymalna liczba iteracji bez dywersyfikacji
     int currentCost;          // Koszt obecnej trasy
-    int bestCost;             // Koszt najlepszej trasy
+    //int bestCost;             // Koszt najlepszej trasy
     double bestFindTime = 0.0;
     void apply2Opt(int *route);
     void initializeGreedyRoute();
 
-
+    int insertNeighborhood(int* currentRoute, int* bestNeighbor);
+    int* generateGreedyRoute();
+    void generateRandomNeighbor(int* currentRoute, int* neighborRoute);
+    void generate2OptNeighbor(int* currentRoute, int* neighborRoute);
+    int swapNeighborhood(int* currentRoute, int* bestNeighbor);
+    void swapElements(int* neighbor, int numCities, int i, int j);
+    void getRandomNeighbor(int* currentRoute,int* neighborRoute, std::mt19937& gen);
 public:
     //SimAnnealing(int coolingScheme, double coolingRate, double timeLimit);
 
