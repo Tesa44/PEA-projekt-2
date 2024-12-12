@@ -151,30 +151,22 @@ void SimAnnealing::swapElements(int* neighbor, int numCities, int i, int j) {
 
 int* SimAnnealing::solve() {
 
-    // Wyczyszczenie rozwiazania
-    double timeOfResult = 0.0;
     int* bestRoute = new int[numCities+1];
-    // Rozwiazanie poczatkowe - wygenerowane losowo
-    //std::vector<int> currentSolution;
     int* currentSolution = new int[numCities];
-
-    //currentSolution.resize(numCities);
 
     std::iota(currentSolution, currentSolution + numCities, 0);
     std::random_device rd;
     std::mt19937 gen(rd());
-    //std::shuffle(currentSolution.begin(), currentSolution.end(), gen);
 
     shuffle(currentSolution, currentSolution + numCities, gen);
     copy(currentSolution,currentSolution + numCities,bestRoute);
-    //std::vector<int> bestSolution = currentSolution;
+
     int bestCost = calculateCost(bestRoute);
     currentCost = bestCost;
 
     calculateInitialTemperature();
 
     auto startTime = std::chrono::steady_clock::now();
-
     maxIter = numCities * numCities;
     int iteration = 0;
     double elapsedTime = 0;
@@ -204,7 +196,7 @@ int* SimAnnealing::solve() {
                 copy(currentSolution, currentSolution + numCities, bestRoute);
                 bestRoute[numCities] = bestRoute[0];
                 bestCost = currentCost;
-                timeOfResult = std::chrono::duration<double>(std::chrono::steady_clock::now() - startTime).count();
+                bestFindTime = elapsedTime;
             }
             delete[] neighbor;
         }
@@ -227,7 +219,7 @@ int* SimAnnealing::solve() {
 
     cout << endl << "Wartosc koncowa parametru kontrolnego Tk: " << temperature << endl;
     cout << "Wartosc wyrazenia exp(-1/Tk): " << std::exp(-1 / temperature) << endl;
-    cout << "Czas znalezienia najlepszego rozwiazania: " << timeOfResult << " sekund" << endl;
+    cout << "Czas znalezienia najlepszego rozwiazania: " << bestFindTime << " sekund" << endl;
 
     delete[] currentSolution;
 
