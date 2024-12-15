@@ -13,7 +13,6 @@ private:
     int** distanceMatrix;
 public:
     void loadFromFile(const std::string& fileName);
-    int loadNumCitiesFromFile(const std::string& fileName);
     void saveResultToFile(const std::string& filename, int* route, int numCities);
     int calculateCostFromFile(const std::string& filename, int** distanceMatrix, int numCities);
     int getNumCities();

@@ -72,7 +72,6 @@ void Model::loadFromFile(const std::string& filename) {
             file >> distanceMatrix[i][j];
         }
     }
-    // return distanceMatrix;
 }
 
 int Model::getNumCities() {

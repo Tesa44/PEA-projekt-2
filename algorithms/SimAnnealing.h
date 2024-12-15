@@ -10,7 +10,7 @@
 
 class SimAnnealing {
 private:
-    int numCities;            // Liczba miast
+    int numCities = -1;            // Liczba miast
     int** distanceMatrix;  // Macierz odległości
     int* currentRoute;        // Obecna trasa
     int* bestRoute;           // Najlepsza trasa
@@ -19,21 +19,14 @@ private:
     int coolingScheme = 1;        // Typ schładzania
     double timeLimit = 60.0;         // Limit czasu
     int maxIter = 100;         //Maksymalna liczba iteracji bez dywersyfikacji
-    int currentCost;          // Koszt obecnej trasy
-    //int bestCost;             // Koszt najlepszej trasy
-    double bestFindTime = 0.0;
-    void apply2Opt(int *route);
-    void initializeGreedyRoute();
+    int currentCost = 0;          // Koszt obecnej trasy
+    double bestFindTime = 0.0;  //Czas znalezienia najlepszej trasy
 
-    int insertNeighborhood(int* currentRoute, int* bestNeighbor);
-    int* generateGreedyRoute();
-    void generateRandomNeighbor(int* currentRoute, int* neighborRoute);
-    void generate2OptNeighbor(int* currentRoute, int* neighborRoute);
-    int swapNeighborhood(int* currentRoute, int* bestNeighbor);
     void swapElements(int* neighbor, int numCities, int i, int j);
     void getRandomNeighbor(int* currentRoute,int* neighborRoute, std::mt19937& gen);
+    void calculateInitialTemperature();
+    int calculateCost(int* route);
 public:
-
     ~SimAnnealing() {
         if (distanceMatrix) {
             for (int i = 0; i < numCities; ++i) {
@@ -44,14 +37,10 @@ public:
         delete[] currentRoute;
         delete[] bestRoute;
     }
-    void loadFromFile(const std::string& filename);
-    void initializeRoute();
-    void calculateInitialTemperature();
-    int calculateCost(int* route);
-    void perturbRoute(int* route);
+    //Funkcja glowna
     int* solve();
+    //Settery i gettery
     void setCoolingScheme(int scheme);
-    void saveResultToFile(const std::string& filename);
     void setTimeLimit(double newTimeLimit);
     void setCoolingRate(double newCoolingRate);
     void setNumCities(int newNumCities);

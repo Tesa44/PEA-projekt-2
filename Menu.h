@@ -23,7 +23,6 @@ public:
     int n;
     bool checkChoices(char choice, char choiceQuantity);
     string inputPath();
-    int inputNumberOfTests();
     void exitConfirmMenu();
 };
 
