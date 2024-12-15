@@ -13,6 +13,8 @@
 #include <climits>
 #include <chrono>
 
+#include "Greedy.h"
+
 
 int TabuSearch::calculateCost(int* route) {
         int cost = 0;
@@ -87,31 +89,6 @@ int TabuSearch::insertNeighborhood(int* currentRoute, int* bestNeighbor) {
     delete[] tempRoute;
     return bestCost;
 }
-
-// int TabuSearch::reverseNeighborhood(int* currentRoute, int* bestNeighbor) {
-//     int bestCost = INT_MAX;
-//     int* tempRoute = new int[numCities];
-//
-//     for (int i = 1; i < numCities - 2; ++i) {
-//         for (int j = i + 2; j < numCities; ++j) {
-//             std::copy(currentRoute, currentRoute + numCities, tempRoute);
-//
-//             // Odwracanie fragmentu trasy
-//             std::reverse(tempRoute + i, tempRoute + j + 1);
-//
-//             int cost = calculateCost(tempRoute);
-//
-//             // Uwzględnienie listy tabu i poprawienie warunków wyboru najlepszego sąsiedztwa
-//             if ((tabuList[i][j] == 0 || cost < bestCost) && cost < bestCost) {
-//                 bestCost = cost;
-//                 std::copy(tempRoute, tempRoute + numCities, bestNeighbor);
-//             }
-//         }
-//     }
-//
-//     delete[] tempRoute;
-//     return bestCost;
-// }
 
 int TabuSearch::kSwapNeighborhood(int* currentRoute, int* bestNeighbor)
 {
@@ -194,12 +171,11 @@ int* TabuSearch::solve() {
     for (int i = 0; i < numCities; ++i) {
         tabuList[i] = new int[numCities]();
     }
-
+    Greedy greedy;
     int* bestRoute = new int[numCities + 1];
-    // int* currentRoute = new int[numCities];
-    int* currentRoute = generateGreedyRoute();
+    //int* currentRoute = generateGreedyRoute();
+    int* currentRoute = greedy.solve(distanceMatrix, numCities);
     std::copy(currentRoute, currentRoute + numCities, bestRoute);
-
     int bestCost = calculateCost(bestRoute);
 
     auto startTime = std::chrono::steady_clock::now();
@@ -501,6 +477,14 @@ int TabuSearch::calculateCostFromFile(const std::string& filename, int** distanc
 int** TabuSearch::getDistanceMatrix()
 {
     return distanceMatrix;
+}
+
+void TabuSearch::setDistanceMatrix(int** newMatrix) {
+    distanceMatrix = newMatrix;
+}
+
+void TabuSearch::setNumCities(int newNumCities) {
+    numCities = newNumCities;
 }
 
 void TabuSearch::setTenure(int newTenure)

@@ -239,6 +239,14 @@ void SimAnnealing::setCoolingRate(double newCoolingRate) {
     coolingRate = newCoolingRate;
 }
 
+void SimAnnealing::setDistanceMatrix(int **newDistanceMatrix) {
+    distanceMatrix = newDistanceMatrix;
+}
+
+void SimAnnealing::setNumCities(int newNumCities) {
+    numCities = newNumCities;
+}
+
 void SimAnnealing::calculateInitialTemperature() {
     int maxCost = 0;
     for (int i = 0; i < numCities; i++) {

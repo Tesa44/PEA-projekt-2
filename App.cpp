@@ -6,9 +6,10 @@
 
 #include <iostream>
 #include <sstream>
-
+#include <conio.h>
 
 #include "algorithms/SimAnnealing.h"
+
 
 
 void App::run()
@@ -23,7 +24,9 @@ void App::run()
     double timeLimit;
     int tsChoice;
     int smChoice;
-    while (true)
+    bool exit = false;
+
+    while (!exit)
     {
         menu.mainMenu();
 
@@ -38,14 +41,19 @@ void App::run()
             break;
         case '2':
             path = menu.inputPath();
-            ts.loadFromFile(path);
-            sm.loadFromFile(path);
+            //ts.loadFromFile(path);
+            model.loadFromFile(path);
+            ts.setDistanceMatrix(model.getDistanceMatrix());
+            ts.setNumCities(model.getNumCities());
+            //sm.loadFromFile(path);
+            sw.setDistanceMatrix(model.getDistanceMatrix());
+            sw.setNumCities(model.getNumCities());
             isMatrix = true;
             break;
         case '3':
             timeLimit = menu.inputStop();
             ts.setTimeLimit(timeLimit);
-            sm.setTimeLimit(timeLimit);
+            sw.setTimeLimit(timeLimit);
             break;
         case '4':
             menu.tsMenu();
@@ -55,64 +63,45 @@ void App::run()
         case '5':
             menu.swMenu();
             smChoice = menu.swChoice - '0';
-            sm.setCoolingScheme(smChoice);
+            sw.setCoolingScheme(smChoice);
             break;
         case '6':
-            sm.setCoolingRate(menu.inputFactorA());
+            sw.setCoolingRate(menu.inputFactorA());
             break;
         case '7':
             ts.generateGreedyRoute();
             break;
+        case '8':
+            exit = true;
+            break;
         }
+
     }
 }
 
 void App::runAlgorithms()
 {
-    while (menu.exitConfirmChoice != '2')
-    {
         menu.algorithmsMenu();
         int* solution;
+        string filepath = "wynik.txt";
         srand(time(NULL));
         switch (menu.algorithmChoice) {
         case '1':
-            for (int i = 0; i < 10; i++)
-            {
-                cout << "Test: " << i << endl;
                 solution = ts.solve();
-                // std::cout << ts.getNumCities() << std::endl;
-                //      std::cout << "Najlepsza trasa: ";
-                //      for (int i = 0; i < ts.getNumCities() + 1; ++i) {
-                //          std::cout << solution[i] << " ";
-
-                //      }
-                //      std::cout << '\n';
-                ostringstream os;
-                os << "wynik" << i << ".txt";
-                string filepath = os.str();
-                cout << filepath << endl;
-                ts.saveResultToFile(filepath,solution,ts.getNumCities());
-                std:: cout << "z pliku: "<< ts.calculateCostFromFile(filepath,ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
-                delete[] solution;
-            }
             break;
         case '2':
-            for (int i = 0; i < 10; i++)
-            {
-                solution = sm.solve();
-                ostringstream os;
-                os << "wynik" << i << ".txt";
-                string filepath = os.str();
-                cout << filepath << endl;
-                ts.saveResultToFile(filepath,solution,ts.getNumCities());
-                std:: cout << "z pliku: "<< ts.calculateCostFromFile(filepath,ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
-                delete[] solution;
-            }
+            solution = sw.solve();
             break;
+            default:
+                cout << "Error" << endl;
         }
-        //std:: cout << ts.calculateCostFromFile("wynik.txt",ts.getDistanceMatrix(),ts.getNumCities()) << std::endl;
-        menu.exitConfirmMenu();
+        model.saveResultToFile(filepath,solution,model.getNumCities());
+        std::cout << "Najkrotsza sciezka: " << model.calculateCostFromFile(filepath,model.getDistanceMatrix(),model.getNumCities()) << endl;
+
         delete[] solution;
-    }
+
+        std::cout << "Kliknij dowolny klawisz aby wrocic do menu" << std::endl;
+        getch();
+
 }
 

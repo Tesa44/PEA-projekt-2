@@ -15,4 +15,6 @@ add_executable(PEA_projekt_2 main.cpp
         Menu.cpp
         Menu.h
         algorithms/SimAnnealing.cpp
-        algorithms/SimAnnealing.h)
+        algorithms/SimAnnealing.h
+        algorithms/Greedy.cpp
+        algorithms/Greedy.h)

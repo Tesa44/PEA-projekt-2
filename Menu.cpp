@@ -11,15 +11,16 @@ using namespace std;
 void Menu::mainMenu() {
     while (true) {
         cout << "Witaj w menu programu" << endl;
-        cout << "1. Uzyj ostatnio wczytana macierz" << endl;
-        cout << "2. Wczytaj macierz z pliku o zadanej nazwie" << endl;
+        cout << "1. Przejdz do algorytmow" << endl;
+        cout << "2. Wczytaj macierz z pliku" << endl;
         cout << "3. Podaj kryterium stopu" << endl;
         cout << "4. Wybierz metode sasiedztwa dla TS" << endl;
-        cout << "5. Wybierz metode sasiedztwa dla SW" << endl;
-        cout << "6. Ustaw wspolczynny a dla SW" << endl;
+        cout << "5. Wybierz metode schladzania dla SW" << endl;
+        cout << "6. Ustaw wspolczynnik a dla SW" << endl;
         cout << "7. Rozwiaz metoda zachlanna" << endl;
+        cout << "8. Wyjdz z programu" << endl;
         cin >> mainChoice;
-        if (checkChoices(mainChoice, '7'))
+        if (checkChoices(mainChoice, '8'))
             return;
     }
 }

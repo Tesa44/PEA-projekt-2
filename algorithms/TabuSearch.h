@@ -55,6 +55,9 @@ public:
             delete[] tabuList;
         }
     }
+
+    void setNumCities(int newNumCities);
+    void setDistanceMatrix(int** newMatrix);
     void loadFromFile(const std::string& fileName);
     void setNeighborhood(int choice);
     int* solve();

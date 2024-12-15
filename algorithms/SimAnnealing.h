@@ -33,7 +33,6 @@ private:
     void swapElements(int* neighbor, int numCities, int i, int j);
     void getRandomNeighbor(int* currentRoute,int* neighborRoute, std::mt19937& gen);
 public:
-    //SimAnnealing(int coolingScheme, double coolingRate, double timeLimit);
 
     ~SimAnnealing() {
         if (distanceMatrix) {
@@ -55,6 +54,8 @@ public:
     void saveResultToFile(const std::string& filename);
     void setTimeLimit(double newTimeLimit);
     void setCoolingRate(double newCoolingRate);
+    void setNumCities(int newNumCities);
+    void setDistanceMatrix(int** newDistanceMatrix);
 };
 
 

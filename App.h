@@ -5,6 +5,7 @@
 #ifndef APP_H
 #define APP_H
 #include "Menu.h"
+#include "Model.h"
 #include "algorithms/SimAnnealing.h"
 #include "algorithms/TabuSearch.h"
 
@@ -21,7 +22,8 @@ private:
 
     Menu menu;
     TabuSearch ts;
-    SimAnnealing sm;
+    SimAnnealing sw;
+    Model model;
 
 };
 
