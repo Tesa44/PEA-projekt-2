@@ -219,7 +219,7 @@ int* SimAnnealing::solve() {
 
     cout << endl << "Wartosc koncowa parametru kontrolnego Tk: " << temperature << endl;
     cout << "Wartosc wyrazenia exp(-1/Tk): " << std::exp(-1 / temperature) << endl;
-    cout << "Czas znalezienia najlepszego rozwiazania: " << bestFindTime << " sekund" << endl;
+    cout << "Czas znalezienia najlepszego rozwiazania: " << bestFindTime << " [s]" << endl;
 
     delete[] currentSolution;
 

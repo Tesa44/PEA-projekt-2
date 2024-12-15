@@ -31,7 +31,7 @@ void Menu::tsMenu()
         cout << "Wybierz jedna z metod wyboru sasiedztwa dla TS" << endl;
         cout << "1. SWAP - zamiana dwoch miast w trasie" << endl;
         cout << "2. INSERT - przeniesienie jednego miasta w innej miejsce" << endl;
-        cout << "3. REVERSE - odwrocenie kolejnosci miast na pododcinku trasy" << endl;
+        cout << "3. KSWAP - zmiana trzech miast w trasie" << endl;
         cin >> tsChoice;
         if (checkChoices(tsChoice, '3')) return;
     }
@@ -41,8 +41,8 @@ void Menu::swMenu()
     while (true) {
         cout << "Wybierz jedna z metod schladzania dla SW" << endl;
         cout << "1. T(i+1) = a * T(i)" << endl;
-        cout << "2. T(i+1) = T(i) / (1 + b * T(i))" << endl;
-        cout << "3. T(i+1) = T(0) / log(i + 2)" << endl;
+        cout << "2. T(i+1) = T(i) / (1 + 0.001 * T(i))" << endl;
+        cout << "3. T(i+1) = T(i) / log(i + 2)" << endl;
         cin >> swChoice;
         if (checkChoices(swChoice, '3')) return;
     }

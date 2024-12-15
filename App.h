@@ -6,6 +6,7 @@
 #define APP_H
 #include "Menu.h"
 #include "Model.h"
+#include "algorithms/Greedy.h"
 #include "algorithms/SimAnnealing.h"
 #include "algorithms/TabuSearch.h"
 
@@ -19,11 +20,14 @@ private:
     int coolingScheme = 1;    // Schemat schładzania (1, 2, 3)
     double coolingRate = 0.95; // Współczynnik zmiany temperatury
     double timeLimit = 20.0;  // Limit czasu w sekundach
+    int* solution;
+    string filepath = "wynik.txt";
 
     Menu menu;
     TabuSearch ts;
     SimAnnealing sw;
     Model model;
+    Greedy greedy;
 
 };
 

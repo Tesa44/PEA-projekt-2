@@ -15,9 +15,7 @@
 void App::run()
 {
     //Inicjalizacja
-    // TabuSearch ts(10,100,20.0);
     ts.setNeighborhood(1);
-    // SimAnnealing sm(1, 0.95, 20.0);
 
     bool isMatrix = false;
     string path;
@@ -41,11 +39,9 @@ void App::run()
             break;
         case '2':
             path = menu.inputPath();
-            //ts.loadFromFile(path);
             model.loadFromFile(path);
             ts.setDistanceMatrix(model.getDistanceMatrix());
             ts.setNumCities(model.getNumCities());
-            //sm.loadFromFile(path);
             sw.setDistanceMatrix(model.getDistanceMatrix());
             sw.setNumCities(model.getNumCities());
             isMatrix = true;
@@ -69,21 +65,23 @@ void App::run()
             sw.setCoolingRate(menu.inputFactorA());
             break;
         case '7':
-            ts.generateGreedyRoute();
+            solution = greedy.solve(model.getDistanceMatrix(), model.getNumCities());
+            model.saveResultToFile(filepath,solution,model.getNumCities());
+            cout << "Wynik z metody zachlannej: " << model.calculateCostFromFile(filepath,model.getDistanceMatrix(),model.getNumCities()) << endl;
+            cout << "Kliknij dowolny klawisz aby wrocic do menu" << endl;
+            getch();
+            delete[] solution;
             break;
         case '8':
             exit = true;
             break;
         }
-
     }
 }
 
 void App::runAlgorithms()
 {
         menu.algorithmsMenu();
-        int* solution;
-        string filepath = "wynik.txt";
         srand(time(NULL));
         switch (menu.algorithmChoice) {
         case '1':
@@ -96,12 +94,11 @@ void App::runAlgorithms()
                 cout << "Error" << endl;
         }
         model.saveResultToFile(filepath,solution,model.getNumCities());
-        std::cout << "Najkrotsza sciezka: " << model.calculateCostFromFile(filepath,model.getDistanceMatrix(),model.getNumCities()) << endl;
+        cout << "Najkrotsza sciezka: " << model.calculateCostFromFile(filepath,model.getDistanceMatrix(),model.getNumCities()) << endl;
 
         delete[] solution;
 
-        std::cout << "Kliknij dowolny klawisz aby wrocic do menu" << std::endl;
+        cout << "Kliknij dowolny klawisz aby wrocic do menu" << endl;
         getch();
-
 }
 
