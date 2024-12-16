@@ -10,7 +10,7 @@ using namespace std;
 
 void Menu::mainMenu() {
     while (true) {
-        cout << "Witaj w menu programu" << endl;
+        cout << endl;
         cout << "1. Przejdz do algorytmow" << endl;
         cout << "2. Wczytaj macierz z pliku" << endl;
         cout << "3. Podaj kryterium stopu" << endl;

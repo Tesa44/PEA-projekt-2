@@ -45,32 +45,44 @@ void App::run()
             sw.setDistanceMatrix(model.getDistanceMatrix());
             sw.setNumCities(model.getNumCities());
             isMatrix = true;
+            cout << "Wczytano macierz" << endl;
             break;
         case '3':
             timeLimit = menu.inputStop();
             ts.setTimeLimit(timeLimit);
             sw.setTimeLimit(timeLimit);
+            cout << "Zmieniono kryterium stopu" << endl;
             break;
         case '4':
             menu.tsMenu();
             tsChoice = menu.tsChoice - '0';
             ts.setNeighborhood(tsChoice);
+            cout << "Zmieniono metode sasiedztwa" << endl;
             break;
         case '5':
             menu.swMenu();
             smChoice = menu.swChoice - '0';
             sw.setCoolingScheme(smChoice);
+            cout << "Zmieniono schemat schladzania" << endl;
             break;
         case '6':
             sw.setCoolingRate(menu.inputFactorA());
+            cout << "Zmieniono wspolczynnik schladzania" << endl;
             break;
         case '7':
-            solution = greedy.solve(model.getDistanceMatrix(), model.getNumCities());
-            model.saveResultToFile(filepath,solution,model.getNumCities());
-            cout << "Wynik z metody zachlannej: " << model.calculateCostFromFile(filepath,model.getDistanceMatrix(),model.getNumCities()) << endl;
-            cout << "Kliknij dowolny klawisz aby wrocic do menu" << endl;
-            getch();
-            delete[] solution;
+            if (isMatrix)
+            {
+                solution = greedy.solve(model.getDistanceMatrix(), model.getNumCities());
+                model.saveResultToFile(filepath,solution,model.getNumCities());
+                cout << "Wynik z metody zachlannej: " << model.calculateCostFromFile(filepath,model.getDistanceMatrix()) << endl;
+                cout << "Kliknij dowolny klawisz aby wrocic do menu" << endl;
+                getch();
+                delete[] solution;
+            }
+            else
+            {
+                cout << "Nie masz zadnej zapisane macierzy!" << endl;
+            }
             break;
         case '8':
             exit = true;
@@ -94,7 +106,7 @@ void App::runAlgorithms()
                 cout << "Error" << endl;
         }
         model.saveResultToFile(filepath,solution,model.getNumCities());
-        cout << "Najkrotsza sciezka: " << model.calculateCostFromFile(filepath,model.getDistanceMatrix(),model.getNumCities()) << endl;
+        cout << "Najkrotsza sciezka: " << model.calculateCostFromFile(filepath,model.getDistanceMatrix()) << endl;
 
         delete[] solution;
 

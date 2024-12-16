@@ -4,22 +4,26 @@
 #include <sstream>
 #include <stdexcept>
 
-int Model::calculateCostFromFile(const std::string& filename, int** distanceMatrix, int numCities) {
+int Model::calculateCostFromFile(const std::string& filename, int** distanceMatrix) {
     std::ifstream file(filename);
     if (!file) {
         throw std::runtime_error("Nie można otworzyć pliku do odczytu: " + filename);
     }
 
     // Wczytaj trasę z pliku
+    int cities = 0;
     int* route = new int[numCities + 1];
-    for (int i = 0; i < numCities + 1; ++i) {
+
+    file >> cities;
+
+    for (int i = 0; i < cities + 1; ++i) {
         file >> route[i];
     }
     file.close();
 
     // Oblicz koszt trasy
     int totalCost = 0;
-    for (int i = 0; i < numCities; ++i) {
+    for (int i = 0; i < cities; ++i) {
         totalCost += distanceMatrix[route[i]][route[i + 1]];
     }
 
@@ -33,7 +37,7 @@ void Model::saveResultToFile(const std::string& filename, int* route, int numCit
     if (!file) {
         throw std::runtime_error("Nie można otworzyć pliku do zapisu: " + filename);
     }
-
+    file << numCities << "\n";
     for (int i = 0; i < numCities + 1; ++i) {
         file << route[i] << " ";
     }
