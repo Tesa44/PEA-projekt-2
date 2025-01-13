@@ -32,7 +32,7 @@ void SimAnnealing::getRandomNeighbor(int* currentRoute,int* neighborRoute, std::
         j = dist(gen);
     }
 
-    // Przesunięcie elementów
+    // Zamiana pozycji dwóch miast
     swapElements(neighborRoute, numCities, i, j);
 }
 
@@ -59,11 +59,11 @@ int* SimAnnealing::solve() {
     int* bestRoute = new int[numCities+1];
     int* currentSolution = new int[numCities];
 
-    std::iota(currentSolution, currentSolution + numCities, 0);
-    std::random_device rd;
+    std::iota(currentSolution, currentSolution + numCities, 0); //[0, 1, 2, 3, ..., numCities-1]
+    std::random_device rd; // niedeterministyczny generator liczb losowych
     std::mt19937 gen(rd());
 
-    shuffle(currentSolution, currentSolution + numCities, gen);
+    shuffle(currentSolution, currentSolution + numCities, gen); //Mieszanie elementów tablicy. Inicjalizacja pierwszej trasy
     copy(currentSolution,currentSolution + numCities,bestRoute);
 
     int bestCost = calculateCost(bestRoute);
