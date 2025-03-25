@@ -91,5 +91,5 @@ On the first program launch, the cost matrix must be loaded using option 2.
 Once the matrix is loaded, you can proceed to the algorithms using option 1. Other menu options can be used at any time.
 The result is saved in the file "wynik.txt", which is located in the cmake-build-release folder.
 
-##Documentation
+## Documentation
 The full research process is documented in the file `PEA-projekt-2.pdf`.
